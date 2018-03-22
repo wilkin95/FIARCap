@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="FIARCap-Web.config Connection String" description="FIARCap Connection String used in web.config by the application to access the database." defaultValue="Data Source=DESKTOP-IMV1HK6\SQLEXPRESS;Initial Catalog=FIARCap;Integrated Security=True" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\twilk\\Desktop\\FIARCap\\FIARCap\\obj\\Debug\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='FIARCap']/@connectionString" />
+  </parameter>
+</parameters>
