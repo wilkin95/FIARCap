@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using System;
 
 namespace FIARCap.Models
 {
@@ -12,6 +13,24 @@ namespace FIARCap.Models
         public string PhoneNumber { get; set; }
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
+    }
+
+    public class BookReviewViewModel
+    {
+        public int ID { get; set; }
+
+        [Display(Name = "Date Created")]
+        [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        public DateTime DateCreated { get; set; }
+
+        [Required]
+        public string Content { get; set; }
+
+        public int BookID { get; set; }
+
+        [Display(Name = "Book Title")]
+        public string BookTitle { get; set; }
+        
     }
 
     public class ManageLoginsViewModel

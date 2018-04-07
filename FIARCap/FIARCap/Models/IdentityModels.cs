@@ -34,6 +34,10 @@ namespace FIARCap.Models
             return new ApplicationDbContext();
         }
 
-        public DbSet<Book> books { get; set; }
+        public DbSet<Book> Books { get; set; }
+
+        public System.Data.Entity.DbSet<FIARCap.Models.Review> Reviews { get; set; }
+
+        public System.Data.Entity.DbSet<FIARCap.Models.BookReviewViewModel> BookReviewViewModels { get; set; }
     }
 }

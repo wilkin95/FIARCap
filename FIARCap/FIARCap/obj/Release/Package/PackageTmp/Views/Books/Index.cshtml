@@ -11,24 +11,14 @@
 </p>
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.ISBN)
-        </th>
+        
         <th>
             @Html.DisplayNameFor(model => model.Title)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Author)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Illustrator)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Copyright)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Category)
-        </th>
+       
         <th>
             @Html.DisplayNameFor(model => model.Summary)
         </th>
@@ -40,24 +30,14 @@
 
 @foreach (var item in Model) {
     <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ISBN)
-        </td>
+        
         <td>
             @Html.DisplayFor(modelItem => item.Title)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Author)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Illustrator)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Copyright)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Category)
-        </td>
+     
         <td>
             @Html.DisplayFor(modelItem => item.Summary)
         </td>

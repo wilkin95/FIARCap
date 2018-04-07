@@ -24,5 +24,7 @@ namespace FIARCap.Models
         public string Summary { get; set; }
         public string Topics { get; set; }
 
+        public ICollection<Review> Reviews { get; set; }
+
     }
 }

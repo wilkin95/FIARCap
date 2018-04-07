@@ -14,7 +14,7 @@ namespace FIARCap.Migrations
 
         protected override void Seed(FIARCap.Models.ApplicationDbContext context)
         {
-            context.books.AddOrUpdate(b => b.Title,
+            context.Books.AddOrUpdate(b => b.Title,
                 new Models.Book()
                 {
                     ISBN = "1234567890",

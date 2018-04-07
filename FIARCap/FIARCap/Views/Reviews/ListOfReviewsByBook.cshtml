@@ -1,0 +1,26 @@
+﻿@model IEnumerable<FIARCap.Models.Review>
+
+@{
+    ViewBag.Title = "ListOfReviewsByBook";
+
+
+    //cast the dynamic object to access the Book properties
+    var book = (FIARCap.Models.Book)ViewBag.Book;
+}
+
+<h2>Book Reviews for @book.Title</h2>
+
+<table class="table">
+    @foreach (var review in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => review.DateCreated) <br />
+                @Html.DisplayFor(modelItem => review.Content) <br />
+            </td>
+        </tr>
+    }
+</table>
+
+@Html.ActionLink("Return to book list", "ListBooks", "Books")
+

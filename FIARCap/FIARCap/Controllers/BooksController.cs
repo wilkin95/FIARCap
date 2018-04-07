@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using FIARCap.Models;
 
+
 namespace FIARCap.Controllers
 {
     public class BooksController : Controller
@@ -17,7 +18,13 @@ namespace FIARCap.Controllers
         // GET: Books
         public ActionResult Index()
         {
-            return View(db.books.ToList());
+            return View(db.Books.ToList());
+        }
+
+        // List all books
+        public ActionResult ListBooks()
+        {
+            return View(db.Books.ToList());
         }
 
         // GET: Books/Details/5
@@ -27,7 +34,7 @@ namespace FIARCap.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Book book = db.books.Find(id);
+            Book book = db.Books.Find(id);
             if (book == null)
             {
                 return HttpNotFound();
@@ -38,6 +45,10 @@ namespace FIARCap.Controllers
         // GET: Books/Create
         public ActionResult Create()
         {
+            //generate a select list with ids for book dropdown
+            var bookList = db.Books.Select(b => b);
+            ViewBag.SelectBookList = new SelectList(bookList, "Id", "Title");
+
             return View();
         }
 
@@ -50,7 +61,7 @@ namespace FIARCap.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.books.Add(book);
+                db.Books.Add(book);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -65,7 +76,7 @@ namespace FIARCap.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Book book = db.books.Find(id);
+            Book book = db.Books.Find(id);
             if (book == null)
             {
                 return HttpNotFound();
@@ -96,7 +107,7 @@ namespace FIARCap.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Book book = db.books.Find(id);
+            Book book = db.Books.Find(id);
             if (book == null)
             {
                 return HttpNotFound();
@@ -109,8 +120,8 @@ namespace FIARCap.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Book book = db.books.Find(id);
-            db.books.Remove(book);
+            Book book = db.Books.Find(id);
+            db.Books.Remove(book);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
