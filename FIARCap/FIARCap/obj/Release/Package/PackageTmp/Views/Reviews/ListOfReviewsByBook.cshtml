@@ -22,5 +22,7 @@
     }
 </table>
 
+@Html.ActionLink("Add a Review", "UserCreate", "Reviews", new { bookID = book.Id}, null)
+<br/>
 @Html.ActionLink("Return to book list", "ListBooks", "Books")
 

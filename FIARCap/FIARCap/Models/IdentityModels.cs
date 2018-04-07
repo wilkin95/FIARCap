@@ -39,5 +39,7 @@ namespace FIARCap.Models
         public System.Data.Entity.DbSet<FIARCap.Models.Review> Reviews { get; set; }
 
         public System.Data.Entity.DbSet<FIARCap.Models.BookReviewViewModel> BookReviewViewModels { get; set; }
+
+       
     }
 }

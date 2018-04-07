@@ -20,8 +20,28 @@ namespace FIARCap.Controllers
             return View(BuildBookReviewViewModelList(db.Reviews.ToList()));
         }
         
+        //GET: user create book review
+        public ActionResult UserCreate()
+        {
+            return View();
+        }
 
-        //list of reviews for a give Book
+        //POST: uer create bok review
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UserCreate([Bind(Include = "Id, DateCreated, Content, BookID")] Review review)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Reviews.Add(review);
+                db.SaveChanges();
+                return RedirectToAction("ListOfReviewsByBook", new { id = review.BookID });
+            }
+
+            return View(review);
+        }
+
+        //list of reviews for a given Book
         public ActionResult ListOfReviewsByBook(int Id)
         {
             var bookReviews = db.Reviews

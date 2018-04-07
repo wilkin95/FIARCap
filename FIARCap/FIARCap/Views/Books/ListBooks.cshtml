@@ -15,7 +15,7 @@
                 @Html.DisplayFor(modelItem => item.Author) <br />
                 @Html.DisplayFor(modelItem => item.Summary) <br />
                 @Html.ActionLink("Reviews", "ListOfReviewsByBook", "Reviews", new { id = item.Id }, null)<br />
-                @Html.ActionLink("Create Review", "Create", "Reviews", new { id = item.Id }, null)
+                @Html.ActionLink("Add a Review", "UserCreate", "Reviews", new { bookID = item.Id }, null)
             </td>
         </tr>
     }
