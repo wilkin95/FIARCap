@@ -192,6 +192,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BooksController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IdentityRoleController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="Global.asax.cs">
@@ -289,6 +290,16 @@
     <Content Include="Views\Reviews\UserCreate.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\Details.cshtml" />
+    <Content Include="Views\Account\Create.cshtml" />
+    <Content Include="Views\Account\Edit.cshtml" />
+    <Content Include="Views\Account\Delete.cshtml" />
+    <Content Include="Views\IdentityRole\Index.cshtml" />
+    <Content Include="Views\IdentityRole\Details.cshtml" />
+    <Content Include="Views\IdentityRole\Create.cshtml" />
+    <Content Include="Views\IdentityRole\Edit.cshtml" />
+    <Content Include="Views\IdentityRole\Delete.cshtml" />
+    <Content Include="Views\Account\ViewUsersRoles.cshtml" />
+    <Content Include="Views\Account\AddRoleToUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

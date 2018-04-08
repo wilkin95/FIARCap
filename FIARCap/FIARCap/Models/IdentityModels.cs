@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -19,6 +20,9 @@ namespace FIARCap.Models
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        [Required]
+        public bool LegalAge { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -40,6 +44,6 @@ namespace FIARCap.Models
 
         public System.Data.Entity.DbSet<FIARCap.Models.BookReviewViewModel> BookReviewViewModels { get; set; }
 
-       
+        public System.Data.Entity.DbSet<FIARCap.Models.RoleViewModel> RoleViewModels { get; set; }
     }
 }

@@ -10,6 +10,9 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using FIARCap.Models;
 using System.Collections.Generic;
+using System.Net;
+using System.Data.Entity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace FIARCap.Controllers
 {
@@ -32,6 +35,103 @@ namespace FIARCap.Controllers
             }
 
             return View(model);
+        }
+
+        public ActionResult Delete(string userName = null)
+        {
+            var db = new ApplicationDbContext();
+            var user = db.Users.First(u => u.UserName == userName);
+            var model = new EditUserViewModel(user);
+
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(model);
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(string userName)
+        {
+            var db = new ApplicationDbContext();
+            var user = db.Users.First(u => u.UserName == userName);
+            db.Users.Remove(user);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+
+        //GET:Users/Edit
+        public ActionResult Edit(string userName = null)
+        {
+            if (userName == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var db = new ApplicationDbContext();
+            var user = db.Users.First(u => u.UserName == userName);
+            var model = new EditUserViewModel(user);
+
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "UserName, LastName, FirstName, Email")] EditUserViewModel userModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var db = new ApplicationDbContext();
+                var user = db.Users.First(u => u.UserName == userModel.UserName);
+
+                user.FirstName = userModel.FirstName;
+                user.LastName = userModel.LastName;
+                user.Email = userModel.Email;
+
+                db.Entry(user).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(userModel);
+        }
+
+        //GET: Users/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        //POST: Users/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "UserName, LastName, FirstName, Email")] CreateUserViewModel user)
+        {
+            var db = new ApplicationDbContext();
+
+            if (ModelState.IsValid)
+            {
+                var newUser = new ApplicationUser();
+
+                newUser.UserName = user.UserName;
+                newUser.FirstName = user.FirstName;
+                newUser.LastName = user.LastName;
+                newUser.Email = user.Email;
+                newUser.LegalAge = true;
+
+                db.Users.Add(newUser);
+                db.SaveChanges();                
+            }
+
+            return RedirectToAction("Index");
         }
 
         public ActionResult Details(string userName = null)
@@ -452,6 +552,152 @@ namespace FIARCap.Controllers
 
             base.Dispose(disposing);
         }
+
+        #region USER ROLE MANAGEMENT
+
+        public ActionResult ViewUsersRoles(string userName = null)
+        {
+            if (!string.IsNullOrWhiteSpace(userName))
+            {
+                List<string> userRoles;
+
+                using (var context = new ApplicationDbContext())
+                {
+                    var roleStore = new RoleStore<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>(context);
+                    var roleManager = new RoleManager<IdentityRole>(roleStore);
+
+                    var userStore = new UserStore<ApplicationUser>(context);
+                    var userManager = new UserManager<ApplicationUser>(userStore);
+
+                    var user = userManager.FindByName(userName);
+                    if (user == null)
+                        throw new Exception("User not found!");
+
+                    var userRoleIds = (from r in user.Roles select r.RoleId);
+                    userRoles = (from id in userRoleIds
+                                 let r = roleManager.FindById(id)
+                                 select r.Name).ToList();
+                }
+
+                ViewBag.UserName = userName;
+                ViewBag.RolesForUser = userRoles;
+            }
+            return View();
+        }
+
+        public ActionResult AddRoleToUser(string userName = null)
+        {
+            List<string> roles;
+
+            using (var context = new ApplicationDbContext())
+            {
+                var roleStore = new RoleStore<IdentityRole>(context);
+                var roleManager = new RoleManager<IdentityRole>(roleStore);
+
+                roles = (from r in roleManager.Roles select r.Name).ToList();
+            }
+
+            ViewBag.Roles = new SelectList(roles);
+            ViewBag.UserName = userName;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddRoleToUser(string roleName, string userName)
+        {
+            List<string> roles;
+
+            using (var context = new ApplicationDbContext())
+            {
+                var roleStore = new RoleStore<IdentityRole>(context);
+                var roleManager = new RoleManager<IdentityRole>(roleStore);
+
+                var userStore = new UserStore<ApplicationUser>(context);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+
+                var user = userManager.FindByName(userName);
+                if (user == null)
+                    throw new Exception("User not found!");
+
+                var role = roleManager.FindByName(roleName);
+                if (role == null)
+                    throw new Exception("Role not found!");
+
+                if (userManager.IsInRole(user.Id, role.Name))
+                {
+                    ViewBag.ErrorMessage = "This user already has the role specified !";
+
+                    roles = (from r in roleManager.Roles select r.Name).ToList();
+                    ViewBag.Roles = new SelectList(roles);
+
+                    ViewBag.UserName = userName;
+
+                    return View();
+                }
+                else
+                {
+                    userManager.AddToRole(user.Id, role.Name);
+                    context.SaveChanges();
+
+                    List<string> userRoles;
+                    var userRoleIds = (from r in user.Roles select r.RoleId);
+                    userRoles = (from id in userRoleIds
+                                 let r = roleManager.FindById(id)
+                                 select r.Name).ToList();
+
+                    ViewBag.UserName = userName;
+                    ViewBag.RolesForUser = userRoles;
+
+                    return View("ViewUsersRoles");
+                }
+            }
+        }
+
+
+        public ActionResult DeleteRoleForUser(string userName = null, string roleName = null)
+        {
+            if ((!string.IsNullOrWhiteSpace(userName)) || (!string.IsNullOrWhiteSpace(roleName)))
+            {
+                List<string> userRoles;
+
+                using (var context = new ApplicationDbContext())
+                {
+                    var roleStore = new RoleStore<IdentityRole>(context);
+                    var roleManager = new RoleManager<IdentityRole>(roleStore);
+
+                    var userStore = new UserStore<ApplicationUser>(context);
+                    var userManager = new UserManager<ApplicationUser>(userStore);
+
+                    var user = userManager.FindByName(userName);
+                    if (user == null)
+                        throw new Exception("User not found!");
+
+                    if (userManager.IsInRole(user.Id, roleName))
+                    {
+                        userManager.RemoveFromRole(user.Id, roleName);
+                        context.SaveChanges();
+                    }
+
+                    var userRoleIds = (from r in user.Roles select r.RoleId);
+                    userRoles = (from id in userRoleIds
+                                 let r = roleManager.FindById(id)
+                                 select r.Name).ToList();
+                }
+
+                ViewBag.RolesForUser = userRoles;
+                ViewBag.UserName = userName;
+
+                return View("ViewUsersRoles");
+            }
+            else
+            {
+                return View("Index");
+            }
+
+        }
+
+        #endregion
 
         #region Helpers
         // Used for XSRF protection when adding external logins

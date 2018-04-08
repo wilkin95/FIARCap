@@ -55,6 +55,48 @@ namespace FIARCap.Models
         public bool RememberMe { get; set; }
     }
 
+    public class RoleViewModel
+    {
+        public RoleViewModel() { }
+
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        [Display(Name = "Role Name")]
+        public string Name { get; set; }
+    }
+
+    public class CreateUserViewModel
+    {
+        public CreateUserViewModel() { }
+
+        //Allow Initialization with an instance of ApplicationUser
+        public CreateUserViewModel(ApplicationUser user)
+        {
+            this.UserName = user.UserName;
+            this.FirstName = user.FirstName;
+            this.LastName = user.LastName;
+            this.Email = user.Email;
+        }
+
+        [Key]
+        [Required]
+        [Display(Name = "User Name")]
+        public string UserName { get; set; }
+
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+    }
+
     public class VerifyCodeViewModel
     {
         [Required]
