@@ -1,14 +1,19 @@
 ﻿@model IEnumerable<FIARCap.Models.BookReviewViewModel>
 
 @{
-    ViewBag.Title = "Index";
+                /**/
+
+                ViewBag.Title = "Index";
 }
 
 <h2>Book Reviews</h2>
+@if (User.IsInRole("Site Admin") || (User.IsInRole("Reviewer")))
+{
+    <h3 class=" orangeBtn">
+        @Html.ActionLink("Create New", "Create")
+    </h3>
+}
 
-<h3 class=" orangeBtn">
-    @Html.ActionLink("Create New", "Create")
-</h3>
 <table class="table">
     <tr>
         <th>
@@ -23,29 +28,44 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateCreated)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Content)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.BookTitle)
-        </td>
-              
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.ID })
-        </td>
-        
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookTitle)
+            </td>
+
+
+            @if (User.IsInRole("Site Admin") || (User.IsInRole("Reviewer")))
+            {
+                <td>
+
+                    @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                    }
+                </td>
+            }
+
+        </tr>
+    }
 
 </table>
-
-<h3 class=" orangeBtn">
-    @Html.ActionLink("Back", "Admin", "Home")
-</h3>
+@if (User.IsInRole("Site Admin") || (User.IsInRole("Reviewer")))
+{
+    <h3 class=" orangeBtn">
+        @Html.ActionLink("Back", "Admin", "Home")
+    </h3>
+}
+else if (User.IsInRole("User"))
+{
+    <h3 class=" orangeBtn">
+        @Html.ActionLink("Back", "Index", "Home")
+    </h3>
+}

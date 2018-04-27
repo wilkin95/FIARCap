@@ -144,6 +144,7 @@ namespace FIARCap.Controllers
                     newUser.LastName = user.LastName;
                     newUser.Email = user.Email;
                     newUser.LegalAge = user.LegalAge;
+                   
                 };
 
                 var result = await UserManager.CreateAsync(newUser);
@@ -151,7 +152,8 @@ namespace FIARCap.Controllers
                 {
                     PasswordHasher ph = new PasswordHasher();
                     newUser.PasswordHash = ph.HashPassword(user.Password);
-                    UserManager.AddToRole(newUser.Id, "Guest");
+                    //AddRoleToUser(newUser.Id, "User");
+                    UserManager.AddToRole(newUser.Id, "User");
                     return RedirectToAction("Index", "Account");
                 }
                 AddErrors(result);
@@ -303,6 +305,7 @@ namespace FIARCap.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -311,7 +314,7 @@ namespace FIARCap.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link

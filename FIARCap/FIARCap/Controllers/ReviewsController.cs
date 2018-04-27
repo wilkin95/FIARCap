@@ -16,7 +16,7 @@ namespace FIARCap.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Reviews
-        [AuthorizeOrRedirectAttribute(Roles = "Site Admin, Reviewer")]
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin, Reviewer, User")]
         public ActionResult Index()
         {
             return View(BuildBookReviewViewModelList(db.Reviews.ToList()));

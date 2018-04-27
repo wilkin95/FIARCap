@@ -68,6 +68,13 @@
                     @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                 </td>
             }
+            else if(User.IsInRole("User"))
+            {
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) 
+
+                </td>
+            }
         </tr>
     }
 
