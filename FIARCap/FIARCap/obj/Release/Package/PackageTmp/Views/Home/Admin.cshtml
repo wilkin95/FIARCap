@@ -5,11 +5,22 @@
 
 <h2>Application Administration</h2>
 
-<ul>
-    <li>@Html.ActionLink("Manage Books", "Index", "Books")</li>
-    <li>@Html.ActionLink("Manage Reviews", "Index", "Reviews")</li>
-    <li>@Html.ActionLink("Manage Users", "Index", "Account")</li>
-    <li>@Html.ActionLink("Manage Roles", "Index", "IdentityRole")</li>
+<ul class=" admin">
+    @if (User.IsInRole("Book Admin"))
+    {
+        <li>@Html.ActionLink("Manage Books", "Index", "Books")</li>
+    }
+    else if (User.IsInRole("Site Admin, Reviewer"))
+    {
+        <li>@Html.ActionLink("Manage Reviews", "Index", "Reviews")</li>
+    }
+    else if (User.IsInRole("Site Admin"))
+    {
+        <li>@Html.ActionLink("Manage Books", "Index", "Books")</li>
+        <li>@Html.ActionLink("Manage Reviews", "Index", "Reviews")</li>
+        <li>@Html.ActionLink("Manage Users", "Index", "Account")</li>
+        <li>@Html.ActionLink("Manage Roles", "Index", "IdentityRole")</li>
+    }
 
 </ul>
 

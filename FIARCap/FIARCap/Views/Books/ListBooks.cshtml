@@ -5,19 +5,42 @@
 }
 
 <h2>List of Books</h2>
+<div id="content">
+    <table class="table">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
 
-<table class="table">
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.ActionLink(item.Title, "Details", new { id = item.Id }) <br />
-                @Html.DisplayFor(modelItem => item.Author) <br />
-                @Html.DisplayFor(modelItem => item.Summary) <br />
-                @Html.ActionLink("Reviews", "ListOfReviewsByBook", "Reviews", new { id = item.Id }, null)<br />
-                @Html.ActionLink("Add a Review", "UserCreate", "Reviews", new { bookID = item.Id }, null)
-            </td>
-        </tr>
-    }
-</table>
 
+
+
+                    @Html.ActionLink(item.Title, "Details", new { id = item.Id }) &nbsp;&nbsp;&nbsp;&nbsp;
+                    @*@Html.ActionLink("Add a Review", "UserCreate", "Reviews", new { bookID = item.Id }, null)*@
+
+                </td>
+            </tr>
+        }
+    </table>
+
+</div>
+<div class="sidebar">
+
+    <h3 style="color:darkorange;text-decoration:underline; font-weight:600;margin-bottom:30px;">Read Aloud</h3>
+   
+    <div class="marginBtm20">
+        <img src="~/Media/family.jpg" alt=" Family reading together" style="width:100%;" />
+        <h4>
+            "Children are made readers<br />
+            On the laps of their parents"
+        </h4>
+    </div>
+    <div class="marginBtm20">
+        <img src="~/Media/family2.jpg" alt=" Family reading together" style="width:100%;" />
+        <h4>"A family that reads together, grows together"</h4>
+    </div>
+    <div class="marginBtm20">
+        <img src="~/Media/family3.jpg" alt=" Family reading together" style="width:100%;" />
+        <h4>"Reading aloud with children is known to be the single most important activity for building the knowledge and skills they will eventually require for learning to read"</h4>
+    </div>
+</div>

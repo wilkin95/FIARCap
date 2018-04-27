@@ -1,24 +1,39 @@
 ﻿@model IEnumerable<FIARCap.Models.Book>
 
+
 @{
     ViewBag.Title = "Index";
+
 }
 
-<h2>Index</h2>
-
+<h2>Book Info</h2>
+@using (Html.BeginForm())
+{
 <p>
-    @Html.ActionLink("Create New", "Create")
+    Find by Title: @Html.TextBox("SearchString")
+    <input type="submit" value="Search" />     
+    <strong id="clearFilter">@Html.ActionLink("Clear Filter", "Index")</strong>
 </p>
+}
+<h2></h2>
+ 
+
+@if (User.IsInRole("Site Admin") || User.IsInRole("Book Admin"))
+{
+    <h3 class="orangeBtn">
+        @Html.ActionLink("Create New", "Create")
+    </h3>
+}
 <table class="table">
-    <tr>
-        
+    <tr id="tableHeader">
+
         <th>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.ActionLink(@Html.DisplayNameFor(model => model.Title).ToHtmlString(), "Index", new { sortOrder = "Title" })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Author)
+            @Html.ActionLink(@Html.DisplayNameFor(model => model.Author).ToHtmlString(), "Index", new { sortOrder = "Author" })
         </th>
-       
+
         <th>
             @Html.DisplayNameFor(model => model.Summary)
         </th>
@@ -28,28 +43,56 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Author)
-        </td>
-     
-        <td>
-            @Html.DisplayFor(modelItem => item.Summary)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Topics)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Summary)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Topics)
+            </td>
+            @if (User.IsInRole("Site Admin") || User.IsInRole("Book Admin"))
+            {
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            }
+        </tr>
+    }
 
 </table>
+
+
+
+@using PagedList;
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Index";
+
+    // Cast the model as a Paged List to access pagination properties
+    var pagedList = (IPagedList)Model;
+}
+
+Page @(pagedList.PageCount < pagedList.PageNumber ? 0 : pagedList.PageNumber) of @pagedList.PageCount
+@Html.PagedListPager(pagedList, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+
+@if (User.IsInRole("Site Admin") || User.IsInRole("Book Admin"))
+{
+<h3 class=" orangeBtn">
+    @Html.ActionLink("Back", "Admin", "Home")
+</h3>
+}
+  

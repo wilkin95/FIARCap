@@ -24,7 +24,8 @@ namespace FIARCap.Migrations
                     Copyright = 1933,
                     Category = Models.BookCategory.Classic,
                     Summary = "A duck learns there are worse things than taking the consequences for one’s mistakes.",
-                    Topics = "Discernment, China, Ducks, Buoyancy, Health and Safety, Reflection of Light"
+                    Topics = "Discernment, China, Ducks, Buoyancy, Health and Safety, Reflection of Light",
+                    ImagePath = "ping.jpg"
                 },
             new Models.Book()
             {
@@ -35,7 +36,8 @@ namespace FIARCap.Migrations
                 Copyright = 1940,
                 Category = Models.BookCategory.Classic,
                 Summary = "A boy discovers that he has a special talent and using it makes a difference.",
-                Topics = "Ohio, Human Relationships, War Monuments, Patriotism, Harmonica, Architecture, Taste Buds, Sound and Acoustics"
+                Topics = "Ohio, Human Relationships, War Monuments, Patriotism, Harmonica, Architecture, Taste Buds, Sound and Acoustics",
+                ImagePath = "lentil.jpg"
             },
             new Models.Book()
             {
@@ -46,7 +48,8 @@ namespace FIARCap.Migrations
                 Copyright = 1960,
                 Category = Models.BookCategory.Fiction,
                 Summary = "Mako receives a new pair of shoes and learns the importance of honesty.",
-                Topics = "Japan, Honesty, Weather, Architecture, Islands"
+                Topics = "Japan, Honesty, Weather, Architecture, Islands",
+                ImagePath = "clogs.jpg"
             }
             );
         }

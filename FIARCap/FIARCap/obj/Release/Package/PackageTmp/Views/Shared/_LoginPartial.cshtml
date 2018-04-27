@@ -8,7 +8,23 @@
     <ul class="nav navbar-nav navbar-right">
         <li>
             @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+              
+
         </li>
+
+        @if (User.IsInRole("Site Admin"))
+        {
+            <li>@Html.ActionLink("Site Admin", "Admin", "Home")</li>
+        }
+        else if (User.IsInRole("Book Admin"))
+        {
+            <li>@Html.ActionLink("Book Admin", "Admin", "Home")</li>
+        }
+        else if (User.IsInRole("Reviewer"))
+        {
+            <li>@Html.ActionLink("Reviews Admin", "Index", "Reviews")</li>
+        }
+
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
     </ul>
     }
@@ -18,6 +34,6 @@ else
     <ul class="nav navbar-nav navbar-right">
         <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
         <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
-        <li>@Html.ActionLink("Admin", "Admin", "Home")</li>
+        @*<li>@Html.ActionLink("Admin", "Admin", "Home")</li>*@
     </ul>
 }

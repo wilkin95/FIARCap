@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using FIARCap.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net;
-
+using FIARCap.CustomAttribute;
 
 namespace FIARCap.Controllers
 {
@@ -17,12 +17,14 @@ namespace FIARCap.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: IdentityRole
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         public ActionResult Index()
         {
             return View(db.Roles.ToList());
         }
 
         // GET: IdentityRoles/Delete/5
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         public ActionResult Delete(string id)
         {
             if (id == null)
@@ -38,6 +40,7 @@ namespace FIARCap.Controllers
         }
 
         // POST: IdentityRoles/Delete/5
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
@@ -49,6 +52,7 @@ namespace FIARCap.Controllers
         }
 
         //GET: IdentityRoles/Edit/5
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         public ActionResult Edit(string id)
         {
             if (id == null)
@@ -64,6 +68,7 @@ namespace FIARCap.Controllers
         }
 
         // POST: IdentityRoles/Edit/5
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit ([Bind(Include = "ID, Name")] IdentityRole role)
@@ -78,12 +83,14 @@ namespace FIARCap.Controllers
         }
 
         //GET: IdentityRoles/Create
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         public ActionResult Create()
         {
             return View();
         }
 
         //POST: IdentityRoles/Create
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID, Name")] IdentityRole role)
@@ -100,6 +107,7 @@ namespace FIARCap.Controllers
 
 
         //GET: IdentityRoles/Details/5
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         public ActionResult Details(string id)
         {
             if (id == null)

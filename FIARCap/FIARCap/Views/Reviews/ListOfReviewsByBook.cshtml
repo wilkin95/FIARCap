@@ -22,7 +22,13 @@
     }
 </table>
 
-@Html.ActionLink("Add a Review", "UserCreate", "Reviews", new { bookID = book.Id}, null)
-<br/>
+
+@if (User.IsInRole("Site Admin, Reviewer"))
+{
+<li>@Html.ActionLink("Add a Review", "UserCreate", "Reviews", new { bookID = book.Id }, null)</li>
+}
+
+
+<br />
 @Html.ActionLink("Return to book list", "ListBooks", "Books")
 

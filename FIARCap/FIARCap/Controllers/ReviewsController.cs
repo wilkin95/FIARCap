@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using FIARCap.Models;
+using FIARCap.CustomAttribute;
 
 namespace FIARCap.Controllers
 {
@@ -15,18 +16,22 @@ namespace FIARCap.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Reviews
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin, Reviewer")]
         public ActionResult Index()
         {
             return View(BuildBookReviewViewModelList(db.Reviews.ToList()));
+            return View(db.Books.OrderBy(b => b.Title).ToList());
         }
-        
+
         //GET: user create book review
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin, Reviewer, Book Admin, User")]
         public ActionResult UserCreate()
         {
             return View();
         }
 
-        //POST: uer create bok review
+        //POST: uer create book review
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin, Reviewer, Book Admin, User")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult UserCreate([Bind(Include = "Id, DateCreated, Content, BookID")] Review review)
@@ -42,6 +47,7 @@ namespace FIARCap.Controllers
         }
 
         //list of reviews for a given Book
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin, Reviewer, Book Admin, User")]
         public ActionResult ListOfReviewsByBook(int Id)
         {
             var bookReviews = db.Reviews
@@ -100,11 +106,12 @@ namespace FIARCap.Controllers
                     BookTitle = bookTitles[review.BookID]
                 });
             }
-            return bookReviewViewModel;
+            return bookReviewViewModel.OrderByDescending(b => b.DateCreated).ToList() ;
         }
 
 
         // GET: Reviews/Details/5
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin, Reviewer, Book Admin, User")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -122,9 +129,10 @@ namespace FIARCap.Controllers
         }
 
         // GET: Reviews/Create
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin, Reviewer, Book Admin, User")]
         public ActionResult Create()
         {
-            //generate selet list with ids for book dropdown
+            //generate select list with ids for book dropdown
             var bookList = db.Books.Select(b => b);
             ViewBag.SelectBookList = new SelectList(bookList, "Id", "Title");
 
@@ -134,6 +142,7 @@ namespace FIARCap.Controllers
         // POST: Reviews/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin, Reviewer, Book Admin, User")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,DateCreated,Content,BookID")] Review review)
@@ -149,6 +158,7 @@ namespace FIARCap.Controllers
         }
 
         // GET: Reviews/Edit/5
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin, Reviewer")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -173,6 +183,7 @@ namespace FIARCap.Controllers
         // POST: Reviews/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin, Reviewer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,DateCreated,Content,BookID")] Review review)
@@ -187,6 +198,7 @@ namespace FIARCap.Controllers
         }
 
         // GET: Reviews/Delete/5
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin, Reviewer")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -203,6 +215,7 @@ namespace FIARCap.Controllers
         }
 
         // POST: Reviews/Delete/5
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin, Reviewer")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

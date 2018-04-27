@@ -23,7 +23,7 @@ namespace FIARCap.Models
         public BookCategory Category { get; set; }
         public string Summary { get; set; }
         public string Topics { get; set; }
-
+        public string ImagePath { get; set; }
         public ICollection<Review> Reviews { get; set; }
 
     }

@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using FIARCap.CustomAttribute;
 
 namespace FIARCap.Controllers
 {
@@ -22,6 +23,7 @@ namespace FIARCap.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         public ActionResult Index()
         {
             var db = new ApplicationDbContext();
@@ -34,9 +36,10 @@ namespace FIARCap.Controllers
                 model.Add(u);
             }
 
-            return View(model);
+            return View(model.OrderBy(b => b.UserName).ToList());
         }
 
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         public ActionResult Delete(string userName = null)
         {
             var db = new ApplicationDbContext();
@@ -51,6 +54,7 @@ namespace FIARCap.Controllers
             return View(model);
         }
 
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         [ValidateAntiForgeryToken]
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(string userName)
@@ -64,8 +68,10 @@ namespace FIARCap.Controllers
 
 
         //GET:Users/Edit
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         public ActionResult Edit(string userName = null)
         {
+             
             if (userName == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -83,18 +89,28 @@ namespace FIARCap.Controllers
             return View(model);
         }
 
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserName, LastName, FirstName, Email")] EditUserViewModel userModel)
+        public ActionResult Edit([Bind(Include = "UserName, LastName, FirstName, Email, Password, ConfirmPassword, LegalAge")] EditUserViewModel userModel)
         {
             if (ModelState.IsValid)
             {
                 var db = new ApplicationDbContext();
                 var user = db.Users.First(u => u.UserName == userModel.UserName);
-
-                user.FirstName = userModel.FirstName;
-                user.LastName = userModel.LastName;
-                user.Email = userModel.Email;
+                if (user != null)
+                {
+                    user.UserName = userModel.Email;
+                    user.FirstName = userModel.FirstName;
+                    user.LastName = userModel.LastName;
+                    user.Email = userModel.Email;
+                    user.LegalAge = userModel.LegalAge;
+                    if (userModel.Password != null)
+                    {
+                        PasswordHasher ph = new PasswordHasher();
+                        user.PasswordHash = ph.HashPassword(userModel.Password);
+                    }
+                }
 
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
@@ -105,35 +121,45 @@ namespace FIARCap.Controllers
         }
 
         //GET: Users/Create
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         public ActionResult Create()
         {
             return View();
         }
 
         //POST: Users/Create
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UserName, LastName, FirstName, Email")] CreateUserViewModel user)
+        public async Task<ActionResult> Create([Bind(Include = "UserName, LastName, FirstName, Email, Password, ConfirmPassword, LegalAge")] CreateUserViewModel user)
         {
             var db = new ApplicationDbContext();
 
             if (ModelState.IsValid)
             {
                 var newUser = new ApplicationUser();
+                {
+                    newUser.UserName = user.Email;
+                    newUser.FirstName = user.FirstName;
+                    newUser.LastName = user.LastName;
+                    newUser.Email = user.Email;
+                    newUser.LegalAge = user.LegalAge;
+                };
 
-                newUser.UserName = user.UserName;
-                newUser.FirstName = user.FirstName;
-                newUser.LastName = user.LastName;
-                newUser.Email = user.Email;
-                newUser.LegalAge = true;
-
-                db.Users.Add(newUser);
-                db.SaveChanges();                
+                var result = await UserManager.CreateAsync(newUser);
+                if (result.Succeeded)
+                {
+                    PasswordHasher ph = new PasswordHasher();
+                    newUser.PasswordHash = ph.HashPassword(user.Password);
+                    UserManager.AddToRole(newUser.Id, "Guest");
+                    return RedirectToAction("Index", "Account");
+                }
+                AddErrors(result);
             }
-
-            return RedirectToAction("Index");
+            return View(user);
         }
 
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         public ActionResult Details(string userName = null)
         {
             var db = new ApplicationDbContext();
@@ -554,7 +580,7 @@ namespace FIARCap.Controllers
         }
 
         #region USER ROLE MANAGEMENT
-
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         public ActionResult ViewUsersRoles(string userName = null)
         {
             if (!string.IsNullOrWhiteSpace(userName))
@@ -584,7 +610,7 @@ namespace FIARCap.Controllers
             }
             return View();
         }
-
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         public ActionResult AddRoleToUser(string userName = null)
         {
             List<string> roles;
@@ -602,6 +628,7 @@ namespace FIARCap.Controllers
             return View();
         }
 
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddRoleToUser(string roleName, string userName)
@@ -654,7 +681,7 @@ namespace FIARCap.Controllers
             }
         }
 
-
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin")]
         public ActionResult DeleteRoleForUser(string userName = null, string roleName = null)
         {
             if ((!string.IsNullOrWhiteSpace(userName)) || (!string.IsNullOrWhiteSpace(roleName)))

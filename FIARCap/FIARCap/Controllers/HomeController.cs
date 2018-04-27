@@ -1,8 +1,10 @@
-﻿using System;
+﻿using FIARCap.CustomAttribute;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace FIARCap.Controllers
 {
@@ -13,6 +15,7 @@ namespace FIARCap.Controllers
             return View();
         }
 
+        [AuthorizeOrRedirectAttribute(Roles = "Site Admin, Book Admin, Reviewer")]
         public ActionResult Admin()
         {
             return View();

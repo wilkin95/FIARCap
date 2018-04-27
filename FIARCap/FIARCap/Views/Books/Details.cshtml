@@ -3,80 +3,96 @@
 @{
     ViewBag.Title = "Details";
 }
+<div style="width:70%; float:left;margin-bottom:30px;">
+    <h2>Book Details</h2>
+    <h3 class="orangeBtn">
+        @if (User.IsInRole("Site Admin") || User.IsInRole("Book Admin"))
+        {
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) <br />
+        }
+</h3>
+        <div>
 
-<h2>Details</h2>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.ISBN)
+                </dt>
 
-<div>
-    <h4>Book</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ISBN)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ISBN)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.ISBN)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Title)
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Author)
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Author)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Author)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Author)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Illustrator)
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Illustrator)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Illustrator)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Illustrator)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Copyright)
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Copyright)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Copyright)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Copyright)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Category)
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Category)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Category)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Summary)
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Summary)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Summary)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Summary)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Topics)
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Topics)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Topics)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Topics)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.ImagePath)
+                </dt>
 
-    </dl>
+                <dd>
+                    @Html.DisplayFor(model => model.ImagePath)
+                </dd>
+            </dl>
+        </div>
+        <h3 class=" orangeBtn">@Html.ActionLink("Add a Review", "UserCreate", "Reviews", new { bookID = Model.Id }, null)</h3>
+
+
+        <h3>@Html.ActionLink("Back to List", "Index")</h3>
+
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+    <img src="~/Media/@Model.ImagePath" alt="Image" style="float:left;margin-top:75px; max-height:250px;" />

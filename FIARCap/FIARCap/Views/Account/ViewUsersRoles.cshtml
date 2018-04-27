@@ -7,28 +7,33 @@
 <h2>Roles By User</h2>
 <h3>User: @ViewBag.UserName</h3>
 
-<p>
+<h3 class=" orangeBtn">
+
     @Html.ActionLink("Add a Role", "AddRoleToUser", new { userName = userName })
-</p>
-<table class="table">
-    <tr>
-        <th>
-            User Role
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var role in ViewBag.RolesForUser)
-    {
+    </h3>
+    <table class="table">
         <tr>
-            <td>
-                @role
-            </td>
-            <td>
-                @Html.ActionLink("Delete", "DeleteRoleForUser", new {  userName = userName, roleName = role})
-            </td>
-            
+            <th>
+                User Role
+            </th>
+            <th></th>
         </tr>
-    }
-</table>
 
+        @foreach (var role in ViewBag.RolesForUser)
+        {
+            <tr>
+                <td>
+                    @role
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteRoleForUser", new { userName = userName, roleName = role })
+                </td>
+
+            </tr>
+        }
+    </table>
+   
+    <h3 class=" orangeBtn">
+
+        @Html.ActionLink("Back to List", "Index")
+    </h3>    
